@@ -1,0 +1,13 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "github_assistant_vandelay_research",
+  "name_for_human": "Art Vandelay",
+  "description_for_model": "Read code, view actions, make commits, and create pull requests on GitHub.",
+  "description_for_human": "Interact with GitHub repositories to view, edit, and manage code.",
+  "api": {
+    "url": "https://vandelay-research.github.io/art-vandelay-plugin/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://vandelay-research.github.io/art-vandelay-plugin/logo.png",
+  "contact_email": "art@vandelay.org"
+}
