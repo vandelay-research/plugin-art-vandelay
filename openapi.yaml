@@ -1,0 +1,173 @@
+openapi: 3.0.0
+info:
+  title: GitHub Assistant API
+  version: 1.0.0
+  description: API for interacting with GitHub to read code, manage pull requests, and view GitHub Actions.
+
+# Security scheme using a bearer token
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+# Applying the security scheme globally to all endpoints
+security:
+  - bearerAuth: []
+
+paths:
+  /repos/{owner}/{repo}/contents/{path}:
+    get:
+      summary: Read the content of a file
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: File contents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: string
+                    description: Base64 encoded content of the file
+
+  /repos/{owner}/{repo}/pulls:
+    get:
+      summary: List open pull requests
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of pull requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    number:
+                      type: integer
+                    state:
+                      type: string
+
+    post:
+      summary: Create a pull request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                head:
+                  type: string
+                base:
+                  type: string
+                body:
+                  type: string
+      responses:
+        201:
+          description: Pull request created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: URL of the created pull request
+
+  /repos/{owner}/{repo}/commits:
+    post:
+      summary: Make a commit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                content:
+                  type: string
+                branch:
+                  type: string
+      responses:
+        201:
+          description: Commit created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sha:
+                    type: string
+                    description: SHA of the created commit
+
+  /repos/{owner}/{repo}/actions/runs:
+    get:
+      summary: List GitHub Actions workflow runs
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of workflow runs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    status:
+                      type: string
+                    conclusion:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
